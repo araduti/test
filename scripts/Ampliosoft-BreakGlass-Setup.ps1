@@ -1,10 +1,10 @@
 <#
 .SYNOPSIS
-    Ampliosoft Break-Glass Setup Script — FIDO2 Edition
+    Chirita-law Break-Glass Setup Script — FIDO2 Edition
     Part of package 1.6 (Emergency Recovery Protocol)
 
 .DESCRIPTION
-    Creates two cloud-only emergency accounts (AMPLIO-9999-A and AMPLIO-9999-B).
+    Creates two cloud-only emergency accounts (ACC-9999-A and ACC-9999-B).
     Generates a strong fallback password for each.
     Assigns permanent Global Administrator (not PIM eligible).
     Outputs credentials for printing on Physical Emergency Protocol cards.
@@ -15,7 +15,7 @@
 
 .NOTES
     Version:    2026.2
-    Author:     Ampliosoft
+    Author:     Accesa
     Requires:   Microsoft.Graph
     Scopes:     User.ReadWrite.All, Directory.ReadWrite.All,
                 RoleManagement.ReadWrite.Directory,
@@ -33,7 +33,7 @@ param (
   [string]$ClientShortCode
 )
 
-Write-Host "`n--- Ampliosoft Break-Glass Setup v2026.2 ---" -ForegroundColor Cyan
+Write-Host "`n--- Chirita-law Break-Glass Setup v2026.2 ---" -ForegroundColor Cyan
 Write-Host "Client:     $ClientName" -ForegroundColor White
 Write-Host "Short code: $ClientShortCode`n" -ForegroundColor White
 
@@ -72,8 +72,8 @@ function New-StrongPassword {
 }
 
 $accounts = @(
-  @{ Label = "A (Primary)"; UPN = "AMPLIO-9999-A-$($ClientShortCode.ToUpper())@$tenantDomain"; Nick = "AMPLIO-9999-A-$($ClientShortCode.ToUpper())" }
-  @{ Label = "B (Backup)"; UPN = "AMPLIO-9999-B-$($ClientShortCode.ToUpper())@$tenantDomain"; Nick = "AMPLIO-9999-B-$($ClientShortCode.ToUpper())" }
+  @{ Label = "A (Primary)"; UPN = "ACC-9999-A-$($ClientShortCode.ToUpper())@$tenantDomain"; Nick = "ACC-9999-A-$($ClientShortCode.ToUpper())" }
+  @{ Label = "B (Backup)"; UPN = "ACC-9999-B-$($ClientShortCode.ToUpper())@$tenantDomain"; Nick = "ACC-9999-B-$($ClientShortCode.ToUpper())" }
 )
 
 Write-Host ""
@@ -90,7 +90,7 @@ foreach ($acct in $accounts) {
   }
   $pw = New-StrongPassword
   $user = New-MgUser `
-    -DisplayName "Ampliosoft Emergency $($acct.Label) — $ClientName" `
+    -DisplayName "Chirita-law Emergency $($acct.Label) — $ClientName" `
     -UserPrincipalName $acct.UPN `
     -MailNickname $acct.Nick `
     -AccountEnabled:$true `
@@ -167,7 +167,7 @@ if ($updated -eq 0 -and $failed -eq 0) {
 }
 else {
   if ($updated -gt 0) { Write-Host "  Exclusions applied to $updated policies." -ForegroundColor Green }
-  if ($failed  -gt 0) { Write-Host "  ACTION REQUIRED: $failed policies could not be updated — add exclusions manually." -ForegroundColor Yellow }
+  if ($failed -gt 0) { Write-Host "  ACTION REQUIRED: $failed policies could not be updated — add exclusions manually." -ForegroundColor Yellow }
 }
 
 # Print fallback passwords
